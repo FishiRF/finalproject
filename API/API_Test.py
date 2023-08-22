@@ -6,30 +6,36 @@ class TestAPI:
     @pytest.fixture()
     def url(self):
         '''
-        :return: the function returns the req-res website url for the users page
+        Get the base URL of the API.
+        :return: The base URL of the API.
         '''
         return 'https://reqres.in/api/'
 
     def test1_user_data_P(self, url):
         '''
-        :param url: this parameter represents the req-res website url
-        :return: the function tests if the user exists
-                 and if the website contains the user's data
+        Test retrieving user data with a valid user ID.
+        :param url: The base URL of the API.
+        :return: None
         '''
-        status_code, user_data = get_existing_user(url, 'user/1')
+        status_code, user_data = get_user_data(url, 'user/1')
         assert status_code < 400 and user_data is not None, "User doesn't exists"
 
     def test2_user_data_N(self, url):
         '''
-        :param url: this parameter represents the req-res website url
-        :return: the function tests the case for a none-existing user
-                 and checks if the website contains no data
+        Test retrieving user data with an invalid user ID.
+        :param url: The base URL of the API.
+        :return: None
         '''
-        status_code, user_data = get_existing_user(url, 'user/999')
+        status_code, user_data = get_user_data(url, 'user/999')
         # the file is not empty but showing only {}
         assert status_code >= 400 and user_data == {}
 
     def test3_create_user(self, url):
+        '''
+        Test creating a new user with valid data.
+        :param url: The base URL of the API.
+        :return: None
+        '''
         data = {
                 "name": "morpheus",
                 "job": "leader"
@@ -39,6 +45,11 @@ class TestAPI:
                and user_data['job'] == data['job'], 'Data is invalid'
 
     def test4_user_login_P(self, url):
+        '''
+        Test user login with valid credentials.
+        :param url: The base URL of the API.
+        :return: None
+        '''
         data = {
                 "email": "eve.holt@reqres.in",
                 "password": "cityslicka"
@@ -47,6 +58,11 @@ class TestAPI:
         assert status_code < 400 and token is not None, 'Bad credentials'
 
     def test5_user_login_N(self, url):
+        '''
+        Test user login with invalid credentials.
+        :param url: The base URL of the API.
+        :return: None
+        '''
         data = {
                 "email": "peter@klaven"
                 }
@@ -54,7 +70,12 @@ class TestAPI:
         assert status_code >= 400 or token is None
 
     def test6_invalid_http_method(self, url):
+        '''
+        Test handling of invalid HTTP method.
+        :param url: The base URL of the API.
+        :return: None
+        '''
         status_code = invalid_http_method(url, 'user')
-        assert status_code >= 400, f'Invalid HTTP method not handled correctly{status_code}'
+        assert status_code >= 400, f'Invalid HTTP method not handled correctly {status_code}'
 
 
