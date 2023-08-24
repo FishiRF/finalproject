@@ -7,7 +7,6 @@ class TestUI:
     def url(self):
         return 'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login'
 
-
     def test1_user_deposit(self, url):
         # לשאול את חודי איך לעשות פעם אחת סלקטורים לכל הפונקציות
         selectors = {
@@ -43,4 +42,38 @@ class TestUI:
         driver = get_driver(url)
         balance_before, balance_after = user_balance(driver, selectors, 1000, 250)
         assert balance_after == balance_before + 750
+
+        driver.quit()
+
+    def test3_delete_customer(self, url):
+        selectors = {'manager_login_btn': 'body > div > div > div.ng-scope > div > div.borderM.box.padT20 > div:nth-child(3) > button',
+                     'customers_btn': 'body > div > div > div.ng-scope > div > div.center > button:nth-child(3)',
+                     'delete_neville_btn': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > table > tbody > tr:nth-child(5) > td:nth-child(5) > button',
+                     'customers_table': 'body > div > div > div.ng-scope > div > div.ng-scope > div'}
+        driver = get_driver(url)
+        table_before, table_after = delete_customer(driver, selectors)
+        assert table_after != table_before
+        # another option - לשאול את חודי מה יותר נכון
+        # assert len(table_after) < len(table_before)
+
+        driver.quit()
+
+    def test4_add_customer(self, url):
+        driver = get_driver(url)
+        selectors = {
+            'manager_login_btn': 'body > div > div > div.ng-scope > div > div.borderM.box.padT20 > div:nth-child(3) > button',
+            'customers_btn': 'body > div > div > div.ng-scope > div > div.center > button:nth-child(3)',
+            'delete_neville_btn': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > table > tbody > tr:nth-child(5) > td:nth-child(5) > button',
+            'customers_table': 'body > div > div > div.ng-scope > div > div.ng-scope > div',
+            'add_customer_btn': 'body > div > div > div.ng-scope > div > div.center > button:nth-child(1)',
+            'first_name_tb': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > form > div:nth-child(1) > input',
+            'last_name_tb': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > form > div:nth-child(2) > input',
+            'post_code_tb': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > form > div:nth-child(3) > input',
+            'add_customer_btn2': 'body > div > div > div.ng-scope > div > div.ng-scope > div > div > form > button'
+            }
+        table_before, table_after = add_customer(driver, selectors)
+        assert table_after != table_before
+        # another option - לשאול את חודי מה יותר נכון
+        # assert len(table_after) > len(table_before)
+
         driver.quit()
