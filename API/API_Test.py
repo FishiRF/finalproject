@@ -1,6 +1,6 @@
 import pytest
 from APIFunctions import *
-# add try except to every test function
+
 class TestAPI:
 
     @pytest.fixture()
@@ -18,7 +18,8 @@ class TestAPI:
         :return: None
         '''
         status_code, user_data = get_user_data(url, 'user/1')
-        assert status_code < 400 and user_data is not None, "User doesn't exists"
+        assert status_code < 400 and user_data is not None,\
+               'User data retrieval failed with a valid user ID.'
 
     def test2_user_data_N(self, url):
         '''
@@ -28,7 +29,8 @@ class TestAPI:
         '''
         status_code, user_data = get_user_data(url, 'user/999')
         # the file is not empty but showing only {}
-        assert status_code >= 400 and user_data == {}
+        assert status_code >= 400 and user_data == {},\
+               'User data retrieval succeeded with an invalid user ID.'
 
     def test3_create_user(self, url):
         '''
@@ -42,7 +44,8 @@ class TestAPI:
                 }
         status_code, user_data = create_user(url, 'users', data)
         assert status_code < 400 and user_data['name'] == data['name']\
-               and user_data['job'] == data['job'], 'Data is invalid'
+               and user_data['job'] == data['job'],\
+               'User creation failed with valid data.'
 
     def test4_user_login_P(self, url):
         '''
@@ -55,7 +58,8 @@ class TestAPI:
                 "password": "cityslicka"
                 }
         status_code, token = user_login(url, 'login', data)
-        assert status_code < 400 and token is not None, 'Bad credentials'
+        assert status_code < 400 and token is not None,\
+               'User login failed with valid credentials.'
 
     def test5_user_login_N(self, url):
         '''
@@ -67,7 +71,8 @@ class TestAPI:
                 "email": "peter@klaven"
                 }
         status_code, token = user_login(url, 'login', data)
-        assert status_code >= 400 or token is None
+        assert status_code >= 400 or token is None,\
+               'User login succeeded with invalid credentials.'
 
     def test6_invalid_http_method(self, url):
         '''
@@ -76,6 +81,7 @@ class TestAPI:
         :return: None
         '''
         status_code = invalid_http_method(url, 'user')
-        assert status_code >= 400, f'Invalid HTTP method not handled correctly {status_code}'
+        assert status_code >= 400,\
+               f'Invalid HTTP method not handled correctly {status_code}'
 
 
