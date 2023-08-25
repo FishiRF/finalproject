@@ -1,6 +1,6 @@
 import pytest
 from APIFunctions import *
-
+# add try except to every test function
 class TestAPI:
 
     @pytest.fixture()
