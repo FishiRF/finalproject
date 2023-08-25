@@ -1,5 +1,5 @@
 '''
-This file contains all the selectors of the XYZ Bank that I used in my codes
+This file contains all the selectors of the XYZ Bank that I used in my codes.
 '''
 
 selectors = \

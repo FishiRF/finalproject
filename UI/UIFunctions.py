@@ -6,17 +6,31 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import requests
 '''
-Programmers Notes: The time sleeps are not necessary needed for the code to work,
-                   they are there to make it easier for the QA engineer
-                   to see through the actions the code does.
+Programmer's Note: The time sleep is not necessary needed for the code to work,
+                   it is there to make it easier to see through the actions the code does.
 '''
 
 def get_driver(url):
+    '''
+    Initialize a WebDriver instance and navigate to the given URL.
+    :param url: The URL to navigate to.
+    :return: The WebDriver instance.
+    '''
     driver = webdriver.Chrome()
     driver.get(url)
     return driver
 
 def user_deposit(driver, login_page, customer_page, account_page, customer_name, deposit):
+    '''
+    Perform a user deposit action and return the balance before and after the deposit.
+    :param driver: The WebDriver instance.
+    :param login_page: CSS selector for the login page elements.
+    :param customer_page: CSS selector for the customer page elements.
+    :param account_page: CSS selector for the account page elements.
+    :param customer_name: CSS selector for the customer name.
+    :param deposit: The amount to deposit.
+    :return: The balance before and after the deposit.
+    '''
     wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
 
     customer_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['customer_login_btn'])))
@@ -54,6 +68,17 @@ def user_deposit(driver, login_page, customer_page, account_page, customer_name,
     return balance, updated_balance
 
 def user_balance(driver, login_page, customer_page, account_page, customer_name, deposit, withdraw):
+    '''
+    Perform user balance actions, including deposit and withdrawal, and return balances.
+    :param driver: The WebDriver instance.
+    :param login_page: CSS selector for the login page elements.
+    :param customer_page: CSS selector for the customer page elements.
+    :param account_page: CSS selector for the account page elements.
+    :param customer_name: CSS selector for the customer name.
+    :param deposit: The amount to deposit.
+    :param withdraw: The amount to withdraw.
+    :return: The balance before and after actions.
+    '''
     wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
 
     customer_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['customer_login_btn'])))
@@ -103,6 +128,15 @@ def user_balance(driver, login_page, customer_page, account_page, customer_name,
     return balance, updated_balance
 
 def delete_customer(driver, login_page, manager_page, customer_delete, data):
+    '''
+    Delete a customer and return tables and customer data before and after deletion.
+    :param driver: The WebDriver instance.
+    :param login_page: CSS selector for the login page elements.
+    :param manager_page: CSS selector for the manager page elements.
+    :param customer_delete: CSS selector for the delete button.
+    :param data: CSS selector for the customer data.
+    :return: Tables and customer data before and after deletion.
+    '''
     wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
 
     manager_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['manager_login_btn'])))
@@ -127,6 +161,14 @@ def delete_customer(driver, login_page, manager_page, customer_delete, data):
     return customers_table, updated_customers_table, customer_data
 
 def add_customer(driver, login_page, manager_page, user_data):
+    '''
+    Add a new customer and return tables before and after the addition.
+    :param driver: The WebDriver instance.
+    :param login_page: CSS selector for the login page elements.
+    :param manager_page: CSS selector for the manager page elements.
+    :param user_data: Dictionary containing user data (first_name, last_name, post_code).
+    :return: Tables before and after adding the customer.
+    '''
     wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
 
     manager_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['manager_login_btn'])))
@@ -175,6 +217,16 @@ def add_customer(driver, login_page, manager_page, user_data):
     return customers_table, updated_customers_table
 
 def open_account(driver, login_page, manager_page, customer_name, currency, data):
+    '''
+    Open a new account for a customer and return relevant data.
+    :param driver: The WebDriver instance.
+    :param login_page: CSS selector for the login page elements.
+    :param manager_page: CSS selector for the manager page elements.
+    :param customer_name: CSS selector for the customer name.
+    :param currency: CSS selector for the currency.
+    :param data: CSS selector for the customer data.
+    :return: URLs before and after opening an account, customer data before and after.
+    '''
     wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
 
     manager_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['manager_login_btn'])))
@@ -223,6 +275,11 @@ def open_account(driver, login_page, manager_page, customer_name, currency, data
     return current_url, open_account_url, customer_data, updated_customer_data
 
 def sanity_test(driver):
+    '''
+    Perform a sanity test by checking the status code of the current page.
+    :param driver: The WebDriver instance.
+    :return: The status code of the page.
+    '''
     current_url = driver.current_url
     res = requests.get(current_url)
     return res.status_code
