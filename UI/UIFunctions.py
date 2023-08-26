@@ -18,10 +18,11 @@ def get_driver(url):
     '''
     try:
         driver = webdriver.Chrome()
+        driver.maximize_window()
         driver.get(url)
         return driver
-    except Exception:
-        print(f"An error occurred in 'get_driver': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'get_driver': {error}")
         return None
 
 def user_deposit(driver, login_page, customer_page, account_page, customer_name, deposit):
@@ -71,8 +72,8 @@ def user_deposit(driver, login_page, customer_page, account_page, customer_name,
         updated_balance = int(updated_balance.text)
 
         return balance, updated_balance
-    except Exception:
-        print(f"An error occurred in 'user_deposit': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'user_deposit': {error}")
         return None
 
 def user_balance(driver, login_page, customer_page, account_page, customer_name, deposit, withdraw):
@@ -135,8 +136,8 @@ def user_balance(driver, login_page, customer_page, account_page, customer_name,
         updated_balance = int(updated_balance.text)
 
         return balance, updated_balance
-    except Exception:
-        print(f"An error occurred in 'user_balance': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'user_balance': {error}")
         return None
 
 def delete_customer(driver, login_page, manager_page, customer_delete, data):
@@ -172,8 +173,8 @@ def delete_customer(driver, login_page, manager_page, customer_delete, data):
         updated_customers_table = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, manager_page['customers_table']))).text
 
         return customers_table, updated_customers_table, customer_data
-    except Exception:
-        print(f"An error occurred in 'delete_customer': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'delete_customer': {error}")
         return None
 
 def add_customer(driver, login_page, manager_page, user_data):
@@ -232,8 +233,8 @@ def add_customer(driver, login_page, manager_page, user_data):
         updated_customers_table = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, manager_page['customers_table']))).text
 
         return customers_table, updated_customers_table
-    except Exception:
-        print(f"An error occurred in 'add_customer': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'add_customer': {error}")
         return None
 
 def open_account(driver, login_page, manager_page, customer_name, currency, data):
@@ -294,8 +295,8 @@ def open_account(driver, login_page, manager_page, customer_name, currency, data
         updated_customer_data = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, data))).text
 
         return current_url, open_account_url, customer_data, updated_customer_data
-    except Exception:
-        print(f"An error occurred in 'open_account': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'open_account': {error}")
         return None
 
 def sanity_test(driver):
@@ -308,6 +309,6 @@ def sanity_test(driver):
         current_url = driver.current_url
         res = requests.get(current_url)
         return res.status_code
-    except Exception:
-        print(f"An error occurred in 'sanity_test': {Exception}")
+    except Exception as error:
+        print(f"An error occurred in 'sanity_test': {error}")
         return None

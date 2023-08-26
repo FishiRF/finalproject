@@ -28,8 +28,8 @@ class TestUI:
             # Save the screenshot and print the path
             driver.save_screenshot(screenshot_path)
             print(f'Screenshot saved: {screenshot_path}')
-        except Exception:
-            print(f'Error occurred while capturing a screenshot: {Exception}')
+        except Exception as error:
+            print(f'Error occurred while capturing a screenshot: {error}')
 
     def test1_user_deposit(self, url):
         '''
@@ -47,7 +47,7 @@ class TestUI:
             # Check if balance increased by 250
             assert updated_balance == balance + 250,\
                    'Balance did not increase by the expected amount.'
-        except Exception:  # can use AssertionError here
+        except Exception as error:  # can use AssertionError here
             # If assertion fails
             self.take_screenshot(driver, 'test1_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
@@ -73,7 +73,7 @@ class TestUI:
             # Check if balance increased by 750
             assert updated_balance == balance + 750,\
                    'Balance did not increase by the expected amount.'
-        except Exception:  # can use AssertionError here
+        except Exception as error:  # can use AssertionError here
             # If assertion fails
             self.take_screenshot(driver, 'test2_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
@@ -100,7 +100,7 @@ class TestUI:
             assert customer_data in customers_table and \
                    customer_data not in updated_customers_table,\
                    'Customer data was not deleted as expected.'
-        except Exception:
+        except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test3_error')  # Capture a screenshot
             traceback.print_exc()  # print the error traceback
@@ -131,7 +131,7 @@ class TestUI:
                 assert value.lower() in updated_customers_table.lower() and \
                        value not in customers_table.lower(),\
                        'Customer data was not added as expected.'
-        except Exception:
+        except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test4_error')  # Capture a screenshot
             traceback.print_exc()  # print the error traceback
@@ -161,7 +161,7 @@ class TestUI:
             assert actual == expected and \
                    len(updated_customer_data) > len(customer_data),\
                    'Account was not opened as expected.'
-        except Exception:
+        except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test5_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
@@ -184,7 +184,7 @@ class TestUI:
             status_code = sanity_test(driver)
             assert status_code == 200,\
                    'Sanity test failed. Status code is not as expected.'
-        except Exception:
+        except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test6_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
