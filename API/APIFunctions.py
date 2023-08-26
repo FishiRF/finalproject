@@ -8,13 +8,17 @@ def get_user_data(url, user_id):
     :return: A tuple containing the HTTP status code
              and the user data retrieved from the response.
     '''
-    res = requests.get(url + user_id)
-    data = res.json()
-    if 'data' in data:
-        user_data = data['data']
-    else:
-        user_data = data
-    return res.status_code, user_data
+    try:
+        res = requests.get(url + user_id)
+        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
+        data = res.json()
+        if 'data' in data:
+            user_data = data['data']
+        else:
+            user_data = data
+        return res.status_code, user_data
+    except requests.exceptions.RequestException as error:
+        return 500, str(error)  # return a custom error status and message
 
 def create_user(url, users, user_data):
     '''
@@ -24,8 +28,12 @@ def create_user(url, users, user_data):
     :param user_data: The data representing the user to be created.
     :return: A tuple containing the HTTP status code and the JSON response data.
     '''
-    res = requests.post(url + users, data=user_data)
-    return res.status_code, res.json()
+    try:
+        res = requests.post(url + users, json=user_data)
+        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
+        return res.status_code, res.json()
+    except requests.exceptions.RequestException as error:
+        return 500, str(error)  # return a custom error status and message
 
 def user_login(url, login, user_data):
     '''
@@ -35,8 +43,12 @@ def user_login(url, login, user_data):
     :param user_data: The data representing the user's login credentials.
     :return: A tuple containing the HTTP status code and the JSON response data.
     '''
-    res = requests.post(url + login, data=user_data)
-    return res.status_code, res.json()
+    try:
+        res = requests.post(url + login, json=user_data)
+        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
+        return res.status_code, res.json()
+    except requests.exceptions.RequestException as error:
+        return 500, str(error)  # return a custom error status and message
 
 def invalid_http_method(url, user):
     '''
@@ -45,6 +57,8 @@ def invalid_http_method(url, user):
     :param user: The user endpoint or identifier.
     :return: The HTTP status code of the response.
     '''
-    res = requests.put(url + user)
-    return res.status_code
-
+    try:
+        res = requests.put(url + user)
+        return res.status_code
+    except requests.exceptions.RequestException as error:
+        return 500  # return a custom error status
