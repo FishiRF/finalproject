@@ -18,15 +18,18 @@ class TestUI:
         :param driver: The WebDriver instance.
         :param test_name: The name of the test.
         '''
-        # Create a directory to store screenshots if it doesn't exist
-        screenshot_dir = "UI_Test_Errors"
-        if not os.path.exists(screenshot_dir):
-            os.makedirs(screenshot_dir)
-        # Define the path for the screenshot using the test name
-        screenshot_path = os.path.join(screenshot_dir, f"{test_name}.png")
-        # Save the screenshot and print the path
-        driver.save_screenshot(screenshot_path)
-        print(f"Screenshot saved: {screenshot_path}")
+        try:
+            # Create a directory to store screenshots if it doesn't exist
+            screenshot_dir = 'UI_Test_Errors'
+            if not os.path.exists(screenshot_dir):
+                os.makedirs(screenshot_dir)
+            # Define the path for the screenshot using the test name
+            screenshot_path = os.path.join(screenshot_dir, f'{test_name}.png')
+            # Save the screenshot and print the path
+            driver.save_screenshot(screenshot_path)
+            print(f'Screenshot saved: {screenshot_path}')
+        except Exception:
+            print(f'Error occurred while capturing a screenshot: {Exception}')
 
     def test1_user_deposit(self, url):
         '''
@@ -44,9 +47,9 @@ class TestUI:
             # Check if balance increased by 250
             assert updated_balance == balance + 250,\
                    'Balance did not increase by the expected amount.'
-        except AssertionError:
+        except Exception:  # can use AssertionError here
             # If assertion fails
-            self.take_screenshot(driver, "test1_error")  # capture a screenshot
+            self.take_screenshot(driver, 'test1_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
             raise  # re-raise the exception
         finally:
@@ -70,9 +73,9 @@ class TestUI:
             # Check if balance increased by 750
             assert updated_balance == balance + 750,\
                    'Balance did not increase by the expected amount.'
-        except AssertionError:
+        except Exception:  # can use AssertionError here
             # If assertion fails
-            self.take_screenshot(driver, "test2_error")  # capture a screenshot
+            self.take_screenshot(driver, 'test2_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
             raise  # Re-raises the exception to ensure proper reporting
         finally:
@@ -99,8 +102,8 @@ class TestUI:
                    'Customer data was not deleted as expected.'
         except Exception:
             # If an exception occurs
-            self.take_screenshot(driver, "test3_error")  # Capture a screenshot
-            print(f"An error occurred: {Exception}")  # print the error message
+            self.take_screenshot(driver, 'test3_error')  # Capture a screenshot
+            traceback.print_exc()  # print the error traceback
             raise  # re-raise the exception
         finally:
             # Quit the driver regardless of whether an exception was raised or not
@@ -130,8 +133,8 @@ class TestUI:
                        'Customer data was not added as expected.'
         except Exception:
             # If an exception occurs
-            self.take_screenshot(driver, "test4_error")  # Capture a screenshot
-            print(f"An error occurred: {Exception}")  # print the error message
+            self.take_screenshot(driver, 'test4_error')  # Capture a screenshot
+            traceback.print_exc()  # print the error traceback
             raise  # re-raise the exception
         finally:
             # Quit the driver regardless of whether an exception was raised or not
@@ -160,7 +163,7 @@ class TestUI:
                    'Account was not opened as expected.'
         except Exception:
             # If an exception occurs
-            self.take_screenshot(driver, "test5_error")  # capture a screenshot
+            self.take_screenshot(driver, 'test5_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
             raise   # re-raise the exception
         finally:
@@ -183,7 +186,7 @@ class TestUI:
                    'Sanity test failed. Status code is not as expected.'
         except Exception:
             # If an exception occurs
-            self.take_screenshot(driver, "test6_error")  # capture a screenshot
+            self.take_screenshot(driver, 'test6_error')  # capture a screenshot
             traceback.print_exc()  # print the error traceback
             raise  # re-raise the exception
         finally:
