@@ -1,5 +1,5 @@
 import requests
-
+import traceback
 def get_user_data(url, user_id):
     '''
     Retrieve user data by sending a GET request to the specified URL.
@@ -17,8 +17,9 @@ def get_user_data(url, user_id):
         else:
             user_data = data
         return res.status_code, user_data
-    except requests.exceptions.RequestException as error:
-        return 500, str(error)  # return a custom error status and message
+    except Exception as error:
+        traceback.print_exc()
+        return f'status code {500}', str(error)  # return a custom error status and message
 
 def create_user(url, users, user_data):
     '''
@@ -32,8 +33,9 @@ def create_user(url, users, user_data):
         res = requests.post(url + users, json=user_data)
         res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
         return res.status_code, res.json()
-    except requests.exceptions.RequestException as error:
-        return 500, str(error)  # return a custom error status and message
+    except Exception as error:
+        traceback.print_exc()
+        return f'status code {500}', str(error)  # return a custom error status and message
 
 def user_login(url, login, user_data):
     '''
@@ -47,8 +49,9 @@ def user_login(url, login, user_data):
         res = requests.post(url + login, json=user_data)
         res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
         return res.status_code, res.json()
-    except requests.exceptions.RequestException as error:
-        return 500, str(error)  # return a custom error status and message
+    except Exception as error:
+        traceback.print_exc()
+        return f'status code {500}', str(error)  # return a custom error status and message
 
 def invalid_http_method(url, user):
     '''
@@ -60,5 +63,6 @@ def invalid_http_method(url, user):
     try:
         res = requests.put(url + user)
         return res.status_code
-    except requests.exceptions.RequestException as error:
-        return 500  # return a custom error status
+    except Exception as error:
+        traceback.print_exc()
+        return f'status code {500} {str(error)}'  # return a custom error status and message
