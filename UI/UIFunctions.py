@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import requests
+import traceback
 '''
 Programmer's Note: The time sleep is not necessary needed for the code to work,
                    it is there to make it easier to see through the actions the code does.
@@ -23,6 +24,7 @@ def get_driver(url):
         return driver
     except Exception as error:
         print(f"An error occurred in 'get_driver': {error}")
+        traceback.print_exc()
         return None
 
 def user_deposit(driver, login_page, customer_page, account_page, customer_name, deposit):
@@ -38,7 +40,6 @@ def user_deposit(driver, login_page, customer_page, account_page, customer_name,
     '''
     try:
         wait = WebDriverWait(driver, 10)  # Wait for up to 10 seconds for elements to appear
-
         customer_login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, login_page['customer_login_btn'])))
         customer_login_btn.click()
         time.sleep(2)
@@ -74,6 +75,7 @@ def user_deposit(driver, login_page, customer_page, account_page, customer_name,
         return balance, updated_balance
     except Exception as error:
         print(f"An error occurred in 'user_deposit': {error}")
+        traceback.print_exc()
         return None
 
 def user_balance(driver, login_page, customer_page, account_page, customer_name, deposit, withdraw):
@@ -138,6 +140,7 @@ def user_balance(driver, login_page, customer_page, account_page, customer_name,
         return balance, updated_balance
     except Exception as error:
         print(f"An error occurred in 'user_balance': {error}")
+        traceback.print_exc()
         return None
 
 def delete_customer(driver, login_page, manager_page, customer_delete, data):
@@ -175,6 +178,7 @@ def delete_customer(driver, login_page, manager_page, customer_delete, data):
         return customers_table, updated_customers_table, customer_data
     except Exception as error:
         print(f"An error occurred in 'delete_customer': {error}")
+        traceback.print_exc()
         return None
 
 def add_customer(driver, login_page, manager_page, user_data):
@@ -235,6 +239,7 @@ def add_customer(driver, login_page, manager_page, user_data):
         return customers_table, updated_customers_table
     except Exception as error:
         print(f"An error occurred in 'add_customer': {error}")
+        traceback.print_exc()
         return None
 
 def open_account(driver, login_page, manager_page, customer_name, currency, data):
@@ -297,6 +302,7 @@ def open_account(driver, login_page, manager_page, customer_name, currency, data
         return current_url, open_account_url, customer_data, updated_customer_data
     except Exception as error:
         print(f"An error occurred in 'open_account': {error}")
+        traceback.print_exc()
         return None
 
 def sanity_test(driver):
@@ -311,4 +317,6 @@ def sanity_test(driver):
         return res.status_code
     except Exception as error:
         print(f"An error occurred in 'sanity_test': {error}")
+        traceback.print_exc()
         return None
+

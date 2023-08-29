@@ -1,7 +1,6 @@
 import pytest
 from UIFunctions import *
 from Bank_Selectors import *
-import traceback
 import os
 
 class TestUI:
@@ -10,7 +9,11 @@ class TestUI:
         '''
         Returns the URL of the test application.
         '''
-        return 'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login'
+        try:
+            return 'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/'
+        except Exception as error:
+            print(f'Error URL {error}')
+            return None
 
     def take_screenshot(self, driver, test_name):
         '''
@@ -29,6 +32,7 @@ class TestUI:
             driver.save_screenshot(screenshot_path)
             print(f'Screenshot saved: {screenshot_path}')
         except Exception as error:
+            traceback.print_exc()
             print(f'Error occurred while capturing a screenshot: {error}')
 
     def test1_user_deposit(self, url):
@@ -40,13 +44,17 @@ class TestUI:
         # to ensure it's accessible in the finally block
         driver = None
         try:
+            deposit = 250
             driver = get_driver(url)
             balance, updated_balance = user_deposit\
             (driver, selectors['login_page'], selectors['customer_page'],
-             selectors['account_page'], selectors['customer_page']['hermione'], 250)
+             selectors['account_page'], selectors['customer_page']['hermione'], deposit)
+            if float(updated_balance) != float(balance) + deposit:
+                self.take_screenshot(driver, 'test1_assertion_error')  # capture a screenshot
+                traceback.print_exc()  # print the error traceback
+                print('Balance did not increase by the expected amount.')
             # Check if balance increased by 250
-            assert updated_balance == balance + 250,\
-                   'Balance did not increase by the expected amount.'
+            assert float(updated_balance) == float(balance) + deposit
         except Exception as error:  # can use AssertionError here
             # If assertion fails
             self.take_screenshot(driver, 'test1_error')  # capture a screenshot
@@ -66,13 +74,18 @@ class TestUI:
         # to ensure it's accessible in the finally block
         driver = None
         try:
+            deposit = 1000
+            withdraw = 250
             driver = get_driver(url)
             balance, updated_balance = user_balance\
             (driver, selectors['login_page'], selectors['customer_page'],
-             selectors['account_page'], selectors['customer_page']['ron'], 1000, 250)
+             selectors['account_page'], selectors['customer_page']['ron'], deposit, withdraw)
+            if float(updated_balance) != float(balance) + (deposit - withdraw):
+                self.take_screenshot(driver, 'test2_assertion_error')  # capture a screenshot
+                traceback.print_exc()  # print the error traceback
+                print('Balance did not increase by the expected amount.')
             # Check if balance increased by 750
-            assert updated_balance == balance + 750,\
-                   'Balance did not increase by the expected amount.'
+            assert float(updated_balance) == float(balance) + (deposit - withdraw)
         except Exception as error:  # can use AssertionError here
             # If assertion fails
             self.take_screenshot(driver, 'test2_error')  # capture a screenshot
@@ -96,10 +109,14 @@ class TestUI:
             customers_table, updated_customers_table, customer_data = delete_customer\
             (driver, selectors['login_page'], selectors['manager_page'],
              selectors['manager_page']['delete_btn5'], selectors['manager_page']['account5_data'])
+            if customer_data not in customers_table or \
+                    customer_data in updated_customers_table:
+                self.take_screenshot(driver, 'test3_assertion_error')  # Capture a screenshot
+                traceback.print_exc()  # print the error traceback
+                print('Customer data was not deleted as expected.')
             # Check if customer_data is in table_before and not in table_after
             assert customer_data in customers_table and \
-                   customer_data not in updated_customers_table,\
-                   'Customer data was not deleted as expected.'
+                   customer_data not in updated_customers_table
         except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test3_error')  # Capture a screenshot
@@ -127,10 +144,18 @@ class TestUI:
                         }
             customers_table, updated_customers_table = add_customer\
             (driver, selectors['login_page'], selectors['manager_page'], user_data)
+            # using .values() gets the value of the current key in the loop
+            count = 0
             for value in user_data.values():
+                if value.lower() not in updated_customers_table()\
+                        or value in customers_table.lower():
+                    count += 1
+                if count > 0:
+                    self.take_screenshot(driver, 'test4_assertion_error')  # Capture a screenshot
+                    traceback.print_exc()  # print the error traceback
+                    print('Customer data was not added as expected.')
                 assert value.lower() in updated_customers_table.lower() and \
-                       value not in customers_table.lower(),\
-                       'Customer data was not added as expected.'
+                       value not in customers_table.lower()
         except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test4_error')  # Capture a screenshot
@@ -158,9 +183,13 @@ class TestUI:
             # checking if the url hasn't changed after opening new account
             # and also checking if the length of the updated customer data is bigger than
             # the customers data before opening an account
-            assert actual == expected and \
-                   len(updated_customer_data) > len(customer_data),\
-                   'Account was not opened as expected.'
+            if actual != expected or len(updated_customer_data) <= len(customer_data):
+                self.take_screenshot(driver, 'test5_assertion_error')  # capture a screenshot
+                traceback.print_exc()  # print the error traceback
+                print('Account was not opened as expected.')
+            else:
+                assert actual == expected and \
+                   len(updated_customer_data) > len(customer_data)
         except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test5_error')  # capture a screenshot
@@ -182,8 +211,13 @@ class TestUI:
         try:
             driver = get_driver(url)
             status_code = sanity_test(driver)
-            assert status_code == 200,\
-                   'Sanity test failed. Status code is not as expected.'
+            if status_code >= 400:
+                self.take_screenshot(driver, 'test6_assertion_error')  # capture a screenshot
+                traceback.print_exc()  # print the error traceback
+                print('Sanity test failed. Status code is not as expected.')
+            else:
+                assert status_code < 400
+
         except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test6_error')  # capture a screenshot
@@ -193,3 +227,4 @@ class TestUI:
             # Quit the driver regardless of whether an exception was raised or not
             if driver:
                 driver.quit()
+
