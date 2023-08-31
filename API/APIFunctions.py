@@ -10,7 +10,6 @@ def get_user_data(url, user_id):
     '''
     try:
         res = requests.get(url + user_id)
-        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
         data = res.json()
         if 'data' in data:
             user_data = data['data']
@@ -19,7 +18,7 @@ def get_user_data(url, user_id):
         return res.status_code, user_data
     except Exception as error:
         traceback.print_exc()
-        return f'status code {500}', str(error)  # return a custom error status and message
+        return 500, str(error)  # return a custom error status and message
 
 def create_user(url, users, user_data):
     '''
@@ -31,11 +30,10 @@ def create_user(url, users, user_data):
     '''
     try:
         res = requests.post(url + users, json=user_data)
-        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
         return res.status_code, res.json()
     except Exception as error:
         traceback.print_exc()
-        return f'status code {500}', str(error)  # return a custom error status and message
+        return 500, str(error)  # return a custom error status and message
 
 def user_login(url, login, user_data):
     '''
@@ -47,11 +45,10 @@ def user_login(url, login, user_data):
     '''
     try:
         res = requests.post(url + login, json=user_data)
-        res.raise_for_status()  # raise HTTP error for bad responses (400+, 500+)
         return res.status_code, res.json()
     except Exception as error:
         traceback.print_exc()
-        return f'status code {500}', str(error)  # return a custom error status and message
+        return 500, str(error)  # return a custom error status and message
 
 def invalid_http_method(url, user):
     '''
@@ -65,4 +62,4 @@ def invalid_http_method(url, user):
         return res.status_code
     except Exception as error:
         traceback.print_exc()
-        return f'status code {500} {str(error)}'  # return a custom error status and message
+        return 500  # return a custom error status and message

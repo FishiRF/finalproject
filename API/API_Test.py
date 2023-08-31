@@ -55,9 +55,9 @@ class TestAPI:
         :return: None
         '''
         try:
-            msg = '404 Client Error: Not Found for url: https://reqres.in/api/user/999'
+            # msg = '404 Client Error: Not Found for url: https://reqres.in/api/user/999'
             status_code, user_data = get_user_data(url, 'user/999')
-            assert status_code >= 400 and user_data == msg, \
+            assert status_code >= 400 and user_data == {}, \
                 'User data retrieval succeeded with an invalid user ID.'
         except Exception as error:
             self.log_error('test2_user_data_N', str(error))  # Log the actual error message
