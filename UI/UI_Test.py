@@ -147,15 +147,15 @@ class TestUI:
             # using .values() gets the value of the current key in the loop
             count = 0
             for value in user_data.values():
-                if value.lower() not in updated_customers_table()\
-                        or value in customers_table.lower():
+                if value.lower() not in updated_customers_table.lower()\
+                        or value.lower() in customers_table.lower():
                     count += 1
                 if count > 0:
                     self.take_screenshot(driver, 'test4_assertion_error')  # Capture a screenshot
                     traceback.print_exc()  # print the error traceback
                     print('Customer data was not added as expected.')
                 assert value.lower() in updated_customers_table.lower() and \
-                       value not in customers_table.lower()
+                       value.lower() not in customers_table.lower()
         except Exception as error:
             # If an exception occurs
             self.take_screenshot(driver, 'test4_error')  # Capture a screenshot
